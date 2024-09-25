@@ -1,1 +1,3 @@
-node_modules
+//  dont add the node_modules to the git-hub
+
+node_modules/
