@@ -1,0 +1,27 @@
+{
+  "name": "node_js",
+  "version": "1.0.0",
+  "description": "Started the nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rushi-Padaval/nodejs_study.git"
+  },
+  "author": "Rushikesh Padaval",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rushi-Padaval/nodejs_study/issues"
+  },
+  "homepage": "https://github.com/Rushi-Padaval/nodejs_study#readme",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.6.3",
+    "node_js": "file:",
+    "nodemon": "^3.1.6"
+  }
+}
