@@ -1,10 +1,49 @@
-const mongoose = require('mongoose');
 
-// Correct the MongoDB connection URL (remove the leading space)
+
+
+//old code stating code 
+
+// const mongoose = require('mongoose');
+// // define mongo connection url
+// const mongoURL = 'mongodb://localhost:27017/hotels '
+// //set up mongo connection 
+// mongoose.connect(mongoURL)
+//   .then(() => {
+//     console.log('Connected to MongoDB server');
+//   })
+//   .catch((error) => {
+//     console.error('Error connecting to MongoDB:', error);
+//   });
+// //get the default connection  
+// const db = mongoose.connection ; 
+// // defining the event listener in the database
+// // Defining the event listener in the database
+// db.on('connected', () => {
+//     console.log('Connected to MongoDB server');
+//   });
+  
+//   db.on('disconnected', () => {
+//     console.log('Disconnected from MongoDB server');
+//   });
+  
+//   db.on('error', (error) => {
+//     console.log('MongoDB connection error:', error);
+//   });
+  
+//         //export database connection 
+//         module.exports = db ;
+
+
+
+
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+// Define the MongoDB connection URL
 const mongoURL = 'mongodb+srv://rushikeshpadaval:XAQlB35lEqUTTB0x@selfcluster0.rahg5.mongodb.net/?retryWrites=true&w=majority&appName=SelfCluster0';
 
-// Set up MongoDB connection using Mongoose
-mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
+// Set up MongoDB connection
+mongoose.connect(mongoURL)
   .then(() => {
     console.log('Connected to MongoDB server');
   })
@@ -15,12 +54,17 @@ mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
 // Get the default connection
 const db = mongoose.connection;
 
-db.on('disconnected', () => {
-  console.log('Disconnected from MongoDB server');
+// Define event listeners for database connection
+db.on('connected', () => {
+  console.log('Connected to MongoDB server');
 });
 
-db.on('error', (error) => {
-  console.error('MongoDB connection error:', error);
+db.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
+db.on('disconnected', () => {
+  console.log('MongoDB disconnected');
 });
 
 // Export the database connection
