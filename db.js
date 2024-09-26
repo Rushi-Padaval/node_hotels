@@ -40,7 +40,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Define the MongoDB connection URL
-const mongoURL = 'mongodb+srv://rushikeshpadaval:XAQlB35lEqUTTB0x@selfcluster0.rahg5.mongodb.net/?retryWrites=true&w=majority&appName=SelfCluster0';
+ //const mongoURL = process.env.MONGODB_URL_LOCAL;
+const mongoURL = process.env.MONGODB_URL ;
+
+
 
 // Set up MongoDB connection
 mongoose.connect(mongoURL)
