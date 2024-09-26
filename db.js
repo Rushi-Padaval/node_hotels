@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 
-// define mongo connection url
-const mongoURL = 'mongodb://localhost:27017/hotels '
+// Correct the MongoDB connection URL (remove the leading space)
+const mongoURL = 'mongodb+srv://rushikeshpadaval:XAQlB35lEqUTTB0x@selfcluster0.rahg5.mongodb.net/?retryWrites=true&w=majority&appName=SelfCluster0';
 
-
-//set up mongo connection 
-mongoose.connect(mongoURL)
+// Set up MongoDB connection using Mongoose
+mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB server');
   })
@@ -13,25 +12,16 @@ mongoose.connect(mongoURL)
     console.error('Error connecting to MongoDB:', error);
   });
 
+// Get the default connection
+const db = mongoose.connection;
 
-//get the default connection  
-const db = mongoose.connection ; 
+db.on('disconnected', () => {
+  console.log('Disconnected from MongoDB server');
+});
 
+db.on('error', (error) => {
+  console.error('MongoDB connection error:', error);
+});
 
-// defining the event listener in the database
-// Defining the event listener in the database
-db.on('connected', () => {
-    console.log('Connected to MongoDB server');
-  });
-  
-  db.on('disconnected', () => {
-    console.log('Disconnected from MongoDB server');
-  });
-  
-  db.on('error', (error) => {
-    console.log('MongoDB connection error:', error);
-  });
-  
-
-        //export database connection 
-        module.exports = db ;
+// Export the database connection
+module.exports = db;
