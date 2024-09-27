@@ -96,15 +96,55 @@ const app = express();
 const db = require ('./db');
 const PORT = process.env.PORT || 3000 ;
 require('dotenv').config();
+const passport = require ('passport') ;
+const LocalStrategy = require ('passport-local').Strategy ;
+const Person = require ('./models/Person');
+
 
 const bodyParser = require ('body-parser');
 app.use(bodyParser.json());
 
 const MenuItem = require('./models/MenuItem');
 
-app.get('/', (req, res) => {
-  res.send('Hey I am rushikesh')
-})
+
+//middleware function 
+
+
+const logRequest =( req , res , next )=>{
+  console.log(`[${new Date().toLocaleString()}] Request Made to: ${req.originalUrl}`);
+  next() ;
+  
+};
+
+ app.use (passport.initialize());
+
+ app.get ('/', passport.authenticate ('local', {session:false}),  function (req, res) {
+  res.send ('Welcome to our hotel');
+
+ })
+
+passport.use (new LocalStrategy (async ( USERNAME, password, done)=>{
+
+  // authentication logic was here 
+  try {
+    console.log('Recieved Credentials:', USERNAME, password);
+    const user = await Person.findOne({username: USERNAME}); 
+    if (!user)
+      return done (null, false, {message : 'Incorrect Password.'} );
+    const isPasswordMatch = user.password === password ? true:false ;
+    if (isPasswordMatch){
+      return done (null, user);
+    }
+   else {
+    return done(null, false , {message: 'Incorrect password.'});
+   }
+  }catch (err){
+    return done (err);
+
+  }
+}))
+
+  
 
 
 // app.get('/Guns', (req, res) => {
