@@ -43,8 +43,45 @@ const personSchema = new mongoose.Schema ({
 
     }
     
+});
+
+
+personSchema.pre ('save', async function (next){
+    const person = this ;
+
+    //hash the password only if it has been modified (or is new)
+    if (!person.isModified('password')) return next();
+
+
+    try{
+        // hash password generation
+        const salt = await bcrypt.genSalt(10);
+
+
+        //hash password 
+        
+        const hashedPassword = await bcrypt.hashPassword (person, password, salt);
+        person.password = hashedPassword ;
+
+        next ();
+
+    }
+    catch(err) {
+return next (err);
+
+    }
 })
+    personSchema.methods.comparePassword = async function (candidatePassword){
+        try{
+
+        }catch(err){
+            throw err;
+
+        }
+    }
+
+
 
 // Crate a person model 
 const Person = mongoose.model ('Person' , personSchema) ;
-module.exports = Person;
+module.exports = Person ;

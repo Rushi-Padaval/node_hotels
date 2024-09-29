@@ -1,114 +1,21 @@
-// function add (a,b) {
-// return a+ b ;
-// }
-
-
-
-// var add = function (a,b){
-//     return a+b;
-// }
-
-
-// var add  = (a,b) => {return a+b};
-
-// var add = (a,b)  =>a+b;
-
-
-// var result = add(2,2);
-// console.log(result);
-
-// (function (){
-//     console.log('Rushikesh');
-    
-// }());
-
-
-
-
-
-// const add = function ( a , b , callback) {
-//      var result = a +  b ;
-//      console.log(result);
-     
-//     callback() ;
-// }
-
-// // add(2,3 , function(){
-// //     console.log('operation completed');
-    
-// // });
-
-
-// // add (2,3, () => console.log('add completed'));
-
-
-// add(2,5, ()=> console.log('operation was completed'));
-
-
-
-// var fs = require ('fs')
-// var os = require ('os')
-
-// var user = os.userInfo();
-// console.log(user);
-// console.log(user.username);
-
-
-// fs.appendFile('greeting.txt', " Hii " + user.username + '!\n', ()=>{console.log('file is created');
-// })
-
-
-// console.log(os);
-// console.log(fs);
-
-// const notes = require('./note');
-// console.log('server file is available');
-
-
-// var age = notes.age;
-// console.log(age);
-
-
-// var result = notes.addNumber (age,29);
-// console.log(result);
-
-// var _ = require('lodash');
-
-
-// var data = ["Rushikesh", 2 , 3 , 2 , "Rushikesh"] ;
-
-// var filter = _.uniq(data);
-// console.log(filter);
-
-// console.log(_.isString('rushikesh'));
-
-
-// const jsonString ='{"name":"rushikesh" , "age": 21 , "city": "kolhapur" }'
-// const jsonObject = JSON.parse(jsonString) ;
-
-// console.log(jsonObject.name);
-
-// console.log(typeof(jsonString));
-
 
 const express = require('express');
 const app = express();
 const db = require ('./db');
-const PORT = process.env.PORT || 3000 ;
+const passport = require('./auth');
 require('dotenv').config();
-const passport = require ('passport') ;
-const LocalStrategy = require ('passport-local').Strategy ;
-const Person = require ('./models/Person');
+
+
 
 
 const bodyParser = require ('body-parser');
 app.use(bodyParser.json());
-
-const MenuItem = require('./models/MenuItem');
+const PORT = process.env.PORT || 3000 ;
 
 
 //middleware function 
-
+app.use (passport.initialize());
+const localAuthMiddleware = passport.authenticate('local', {session: false})
 
 const logRequest =( req , res , next )=>{
   console.log(`[${new Date().toLocaleString()}] Request Made to: ${req.originalUrl}`);
@@ -116,66 +23,18 @@ const logRequest =( req , res , next )=>{
   
 };
 
- app.use (passport.initialize());
-
- app.get ('/', passport.authenticate ('local', {session:false}),  function (req, res) {
-  res.send ('Welcome to our hotel');
-
+ app.get ('/',  localAuthMiddleware,   function (req, res){
+  res.send('Welcome to our hotel');
  })
-
-passport.use (new LocalStrategy (async ( USERNAME, password, done)=>{
-
-  // authentication logic was here 
-  try {
-    console.log('Recieved Credentials:', USERNAME, password);
-    const user = await Person.findOne({username: USERNAME}); 
-    if (!user)
-      return done (null, false, {message : 'Incorrect Password.'} );
-    const isPasswordMatch = user.password === password ? true:false ;
-    if (isPasswordMatch){
-      return done (null, user);
-    }
-   else {
-    return done(null, false , {message: 'Incorrect password.'});
-   }
-  }catch (err){
-    return done (err);
-
-  }
-}))
-
-  
-
-
-// app.get('/Guns', (req, res) => {
-
-//     var newGuns = {
-//         varient : 'Automatic Rifles' ,
-//         name : 'Ak-47 , m416',
-//         is_army: true ,
-
-
-
-//     }
-
-//     res.send(newGuns)
-//   })
-
-//   app.post( '/maqsad', (req,res)=>{
-    
-//    res.send('Maqsad mat bhulna')
-//   })
-
-
-
-// import the personRouter file 
+ // import the personRouter file 
 const personRoutes = require ('./routes/personRoutes');
-app.use('/person', personRoutes);
-
+const menuRoutes = require ('./routes/menuRoutes');
 
 // import the menuItems
-const menuRoutes = require ('./routes/menuRoutes');
-app.use('/menuItem', menuRoutes)
+app.use('/menuItem', localAuthMiddleware, menuRoutes);
+app.use('/person', localAuthMiddleware,  personRoutes);
+
+
 
 app.listen(PORT, () => {
   console.log(`app listening on port ${PORT}`)
