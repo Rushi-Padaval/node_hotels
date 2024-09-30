@@ -15,7 +15,7 @@ passport.use (new LocalStrategy (async ( username, password, done)=>{
       if (!user)
         return done (null, false, {message : 'Incorrect Password.'} );
 
-      const isPasswordMatch = user.comparePassword(password);
+      const isPasswordMatch = await user.comparePassword(password);
       
       if (isPasswordMatch){
         return done (null, user);
