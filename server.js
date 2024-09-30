@@ -31,8 +31,8 @@ const personRoutes = require ('./routes/personRoutes');
 const menuRoutes = require ('./routes/menuRoutes');
 
 // import the menuItems
-app.use('/menuItem', localAuthMiddleware, menuRoutes);
-app.use('/person', localAuthMiddleware,  personRoutes);
+app.use('/menuItem', menuRoutes);
+app.use('/person',   personRoutes);
 
 
 
