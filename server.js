@@ -32,7 +32,7 @@ const menuRoutes = require ('./routes/menuRoutes');
 
 // import the menuItems
 app.use('/menuItem', menuRoutes);
-app.use('/person', localAuthMiddleware,  personRoutes);
+app.use('/person', personRoutes);
 
 
 
