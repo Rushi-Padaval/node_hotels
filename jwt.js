@@ -1,8 +1,15 @@
 const jwt = require ('jsonwebtoken')
 
 const jwtAuthMiddleware = (req, res, next) => {
+
+// first check request headers has authorization or not 
+const authorization = req.headers.authorization 
+if (!authorization) return res.status(401).json ({error: 'Token Not Found'});
+
+
+
 // extract the jwt token from the request header 
-const token = req.headers.authorization.spilit(' ') [1] ;
+const token = req.headers.authorization.split(' ') [1] ;
 if (!token) return res.status (401).json ({error: 'Unauthorized'})
 
 
@@ -28,4 +35,4 @@ const generateToken = (userData) => {
 }
 
 
-Module.exports = {jwtAuthMiddleware, generateToken} ;
+module.exports = {jwtAuthMiddleware, generateToken} ;
